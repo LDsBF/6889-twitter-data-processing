@@ -46,13 +46,15 @@ def send_tweets_to_spark(http_resp, tcp_connection):
             tweet_country_code = "CC" + full_tweet['place']['country_code']
             print("COUNTRY CODE IS : " + tweet_country_code)
             print("------------------------------------------")
-            tcp_connection.send(tweet_text + ' ' + tweet_country_code + ' ' + tweet_screen_name + ' ' + device + '\n')
+            single_tweet = str(tweet_text + " " + tweet_country_code + " " + tweet_screen_name + " " + device + "\n")
+            tcp_connection.send(single_tweet.encode())
 
         except:
             continue
 
 
-TCP_IP = socket.gethostname()
+# TCP_IP = socket.gethostname()
+TCP_IP = ''
 TCP_PORT = 8080
 conn = None
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -65,4 +67,5 @@ conn, addr = s.accept()
 
 print("Connected... Starting getting tweets.")
 resp = get_tweets()
+# conn.send("ELEN6690lalalalalala\n".encode())
 send_tweets_to_spark(resp, conn)

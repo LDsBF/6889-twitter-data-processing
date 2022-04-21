@@ -25,7 +25,7 @@ def process_rdd(time, rdd):
 
         # convert the RDD to Row RDD
         row_rdd = rdd.map(lambda w: Row(word=w[0], word_count=w[1]))
-
+        print("show table 1 ", row_rdd.count())
         # create a DF from the Row RDD
         hashtags_df = sql_context.createDataFrame(row_rdd)
 
@@ -36,6 +36,7 @@ def process_rdd(time, rdd):
         hashtag_counts_df = sql_context.sql(
             "select word , word_count from hashtags where word like '#%'order by word_count desc limit 10")
         hashtag_counts_df.show()
+        print("show table 2")
         hashtag_counts_df.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').option("header",
                                                                                                         "true").csv(
             "hashtag_file.csv")
@@ -71,14 +72,15 @@ ssc = StreamingContext(sc, 2)
 # setting a checkpoint to allow RDD recovery
 ssc.checkpoint("checkpoint_TwitterApp")
 
-# read data from port 9009
+# read data from port 8080
 dataStream = ssc.socketTextStream(gethostname(), 8080)
+# dataStream = ssc.socketTextStream(gethostname(), 8080)
 
 
 # print(dataStream)
-# print(dataStream.context())
+print("DStream count ", dataStream.count())
 print("Here!\n")
-dataStream.pprint(5)
+dataStream.pprint(1)
 
 # split each tweet into words
 words = dataStream.flatMap(lambda line: line.split(" "))
