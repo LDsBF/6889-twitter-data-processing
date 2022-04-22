@@ -2,6 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import glob
+from wordcloud import WordCloud
+from wordcloud import ImageColorGenerator
+from wordcloud import STOPWORDS
 
 path = 'hashtag_file.csv'
 all_files = glob.glob(path + "/*.csv")
@@ -22,6 +25,14 @@ for filename in all_files:
     plt.xlabel('Count')
     plt.title('Top Ten Hashtag Tweets')
 
+    plt.show()
+
+    text = " ".join(i for i in df.word)
+    stopwords = set(STOPWORDS)
+    wordcloud = WordCloud(stopwords=stopwords, background_color="white").generate(text)
+    plt.figure(figsize=(15, 10))
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis("off")
     plt.show()
 
 path = 'country_file.csv'
