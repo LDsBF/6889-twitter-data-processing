@@ -38,20 +38,20 @@ def process_rdd(time, rdd):
         hashtag_counts_df.show()
         print("show table 2")
         hashtag_counts_df.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').option("header",
-                                                                                                        "true").csv(
+                                                                                                        "true").save(
             "hashtag_file.csv")
 
         country_counts_df = sql_context.sql(
             "select word as country_code, word_count as tweet_count from hashtags where word like 'CC%'order by word_count desc limit 10")
         country_counts_df.show()
         country_counts_df.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').option("header",
-                                                                                                        "true").csv(
+                                                                                                        "true").save(
             "country_file.csv")
 
         device_df = sql_context.sql(
             "select word as device, word_count as device_count from hashtags where word like 'TS%'order by word_count desc limit 10")
         device_df.show()
-        device_df.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').option("header", "true").csv(
+        device_df.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').option("header", "true").save(
             "device_file.csv")
 
     except:
@@ -67,7 +67,7 @@ sc = SparkContext(conf=conf)
 sc.setLogLevel("ERROR")
 
 # create the Streaming Context from the above spark context with interval size 2 seconds
-ssc = StreamingContext(sc, 2)
+ssc = StreamingContext(sc, 500)
 
 # setting a checkpoint to allow RDD recovery
 ssc.checkpoint("checkpoint_TwitterApp")
