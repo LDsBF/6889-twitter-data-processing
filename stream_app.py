@@ -38,25 +38,37 @@ def process_rdd(time, rdd):
         hashtag_counts_df.show()
         hashtag_counts_df.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').option("header",
                                                                                                         "true").csv(
-            "hashtag_file.csv")
+            "Users/liupeihan/Desktop/hashtag_file.csv")
+        # hashtag_counts_df.to_csv('Users/liupeihan/Desktop/' + 'hashtag_file.csv', index=False)
 
         country_counts_df = sql_context.sql(
             "select word as country_code, word_count as tweet_count from hashtags where word like 'CC%'order by word_count desc limit 10")
         country_counts_df.show()
         country_counts_df.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').option("header",
                                                                                                         "true").csv(
-            "country_file.csv")
+            "Users/liupeihan/Desktop/country_file.csv")
+
 
         device_df = sql_context.sql(
             "select word as device, word_count as device_count from hashtags where word like 'TS%'order by word_count desc limit 10")
         device_df.show()
         device_df.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').option("header", "true").csv(
-            "device_file.csv")
+            "Users/liupeihan/Desktop/device_file.csv")
 
+        # send_df_to_dashboard(device_df)
     except:
         pass
+        # e = sys.exc_info()[0]
+        # print("Error: %s" % e)
 
-
+# def send_df_to_dashboard(df):
+#     top_tags = [str(t.hashtag) for t in df.select("hashtag").collect()]
+#     tags_count = [p.hashtag_count for p in df.select("hashtag_count").collect()]
+#     url = 'http://127.0.0.1:8080/updateData'
+#     request_data = {'label': str(top_tags), 'data': str(tags_count)}
+#     response = requests.post(url, data=request_data)
+    
+    
 # create spark configuration
 conf = SparkConf()
 conf.setAppName("TwitterStreamApp")
@@ -72,7 +84,7 @@ ssc = StreamingContext(sc, 2)
 ssc.checkpoint("checkpoint_TwitterApp")
 
 # read data from port 9009
-dataStream = ssc.socketTextStream(gethostname(), 8080)
+dataStream = ssc.socketTextStream('127.0.0.1', 8080)
 
 
 # print(dataStream)
@@ -99,3 +111,4 @@ ssc.start()
 
 # wait for the streaming to finish
 ssc.awaitTermination()
+
