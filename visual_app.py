@@ -29,6 +29,7 @@ def tag():
     plt.yticks(y_pos, objects)
     plt.xlabel('Count')
     plt.title('Top Ten Hashtag Tweets')
+    plt.savefig('./resource/tag.jpg')
 
     plt.show()
     #
@@ -38,6 +39,7 @@ def tag():
     plt.figure(figsize=(15, 10))
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis("off")
+    plt.savefig('./resource/wordcloud_tag.jpg')
     plt.show()
 
 #country
@@ -57,6 +59,7 @@ def country():
     plt.yticks(y_pos, objects)
     plt.xlabel('Count')
     plt.title('Tweets from Top 10 countries')
+    plt.savefig('./resource/country.jpg')
 
     plt.show()
 
@@ -66,6 +69,7 @@ def country():
     plt.figure(figsize=(15, 10))
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis("off")
+    plt.savefig('./resource/wordcloud_country.jpg')
     plt.show()
 
 #device
@@ -85,6 +89,7 @@ def device():
     plt.yticks(y_pos, objects)
     plt.xlabel('Count')
     plt.title('Tweets originating from devices')
+    plt.savefig('./resource/device.jpg')
 
     plt.show()
 
@@ -94,8 +99,36 @@ def device():
     plt.figure(figsize=(15, 10))
     plt.imshow(wordcloud, interpolation='bilinear')
     plt.axis("off")
+    plt.savefig('./resource/wordcloud_device.jpg')
+    plt.show()
+
+
+#折线图
+def number():
+    path = r'Users/liupeihan/Desktop/number_file.csv/'  # use your path
+    all_files = glob.glob(path + "/*.csv")
+
+    for filename in all_files:
+        df = pd.read_csv(filename, index_col=None, header=0)
+    df.describe()
+
+    objects = df.num
+    y_pos = objects
+    length = len(y_pos)
+    count = []
+    for i in range(length):
+        count.append(30*i)
+
+    # plt.barh(count, y_pos, alpha=0.5, color="r")
+    plt.plot(count,y_pos, 's-', color = 'r')
+    plt.xlabel('Time')
+    plt.ylabel("Number")
+    plt.title('number of twits per 30 seconds')
+    plt.savefig('./resource/number.jpg')
+
     plt.show()
 
 tag()
 country()
 device()
+number()

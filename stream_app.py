@@ -4,7 +4,7 @@ from pyspark.sql import Row, SQLContext
 import sys
 import requests
 from socket import *
-
+import pandas as pd
 
 def aggregate_tags_count(new_values, total_sum):
     return sum(new_values) + (total_sum or 0)
@@ -39,7 +39,6 @@ def process_rdd(time, rdd):
         hashtag_counts_df.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').option("header",
                                                                                                         "true").csv(
             "Users/liupeihan/Desktop/hashtag_file.csv")
-        # hashtag_counts_df.to_csv('Users/liupeihan/Desktop/' + 'hashtag_file.csv', index=False)
 
         country_counts_df = sql_context.sql(
             "select word as country_code, word_count as tweet_count from hashtags where word like 'CC%'order by word_count desc limit 10")
@@ -58,17 +57,35 @@ def process_rdd(time, rdd):
         # send_df_to_dashboard(device_df)
     except:
         pass
-        # e = sys.exc_info()[0]
-        # print("Error: %s" % e)
 
-# def send_df_to_dashboard(df):
-#     top_tags = [str(t.hashtag) for t in df.select("hashtag").collect()]
-#     tags_count = [p.hashtag_count for p in df.select("hashtag_count").collect()]
-#     url = 'http://127.0.0.1:8080/updateData'
-#     request_data = {'label': str(top_tags), 'data': str(tags_count)}
-#     response = requests.post(url, data=request_data)
-    
-    
+
+def process_rdd1(time, rdd):
+    print("----------- %s -----------" % str(time))
+    try:
+        # Get spark sql singleton context from the current context
+        sql_context = get_sql_context_instance(rdd.context)
+        print("Get spark sql singleton context from the current context -----number------ %s -----------" % str(time))
+
+        # convert the RDD to Row RDD
+        row_rdd = rdd.map(lambda w: Row(word=w[0], word_count=w[1]))
+
+        # create a DF from the Row RDD
+        hashtags_df = sql_context.createDataFrame(row_rdd)
+
+        # Register the dataframe as table
+        hashtags_df.registerTempTable("number")
+
+        hashtag_counts_df = sql_context.sql(
+            "select word as num from number")
+        hashtag_counts_df.show()
+        hashtag_counts_df.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').option("header",
+                                                                                                        "true").csv(
+            "Users/liupeihan/Desktop/number_file.csv")
+
+
+    except:
+        pass
+
 # create spark configuration
 conf = SparkConf()
 conf.setAppName("TwitterStreamApp")
@@ -78,33 +95,39 @@ sc = SparkContext(conf=conf)
 sc.setLogLevel("ERROR")
 
 # create the Streaming Context from the above spark context with interval size 2 seconds
-ssc = StreamingContext(sc, 2)
+ssc = StreamingContext(sc, 30)
 
 # setting a checkpoint to allow RDD recovery
 ssc.checkpoint("checkpoint_TwitterApp")
 
-# read data from port 9009
+# read data from port 8080
+num_permin = []
 dataStream = ssc.socketTextStream('127.0.0.1', 8080)
+dataStream1 = dataStream.countByWindow(30, 30)
 
 
 # print(dataStream)
 # print(dataStream.context())
 print("Here!\n")
-dataStream.pprint(5)
+print("*********")
 
 # split each tweet into words
 words = dataStream.flatMap(lambda line: line.split(" "))
+words1 = dataStream1.flatMap(lambda line: line.split(" "))
 print("data!!!\n")
-# words.pprint(5)
+# dataStream1.pprint()
 
 # filter the words to get only hashtags, then map each hashtag to be a pair of (hashtag,1)
 hashtags = words.map(lambda x: (x, 1))
+hashtags1 = dataStream1.map(lambda x: (x, 1))
 
 # adding the count of each hashtag to its last count
 tags_totals = hashtags.updateStateByKey(aggregate_tags_count)
+tags_totals1= hashtags1.updateStateByKey(aggregate_tags_count)
 
 # do processing for each RDD generated in each interval
 tags_totals.foreachRDD(process_rdd)
+tags_totals1.foreachRDD(process_rdd1)
 
 # start the streaming computation
 ssc.start()
