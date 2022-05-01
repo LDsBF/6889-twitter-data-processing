@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+    <link rel="stylesheet" href="{{url_for('static', filename='home.css')}}">
+    <script type="text/javascript" src="{{url_for('static', filename = 'home.js')}}"></script>
+
+    <div class="row" id="intro">
+        In this application, we try to do data processing of Twitter's tweet in a time period and try to visualize some
+        parameter of tweet to see if it can help promoting advertisement to target user and deploy servers globally.
+    </div>
+
+    <br>
+
+    <div class="row" id="imgRow">
+        <img src="https://i.kym-cdn.com/entries/icons/original/000/026/563/twitter_cover.jpg" id="logo">
+    </div>
+
+    <div class="row" id="btnArea">
+        <div class="col-md-5 homebtn" id="0">
+            What is the most mentioned word in last 10 minute?
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-5 homebtn" id="1">
+            Where are most of the tweet sent from in last 10 minute?
+        </div>
+        <div class="col-md-12">&nbsp;</div>
+        <div class="col-md-5 homebtn" id="2">
+            Want to see what device people use to send tweet?
+        </div>
+        <div class="col-md-2"></div>
+        <div class="col-md-5 homebtn" id="3">
+            Have a look at 5 minute's data flow!
+        </div>
+    </div>
+
+{% endblock %}
