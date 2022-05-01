@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import pandas as pd
 import glob
 from wordcloud import WordCloud
 from wordcloud import ImageColorGenerator
@@ -16,7 +15,7 @@ def tag():
         df = pd.read_csv(filename, index_col=None, header=0)
 
     df.describe()
-    print(df)
+
     import matplotlib.pyplot as plt;plt.rcdefaults()
     import numpy as np
     import matplotlib.pyplot as plt
