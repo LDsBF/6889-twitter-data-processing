@@ -6,22 +6,22 @@ app = Flask(__name__)
 data = {
     "0": {
         "title": "Keyword",
-        "img1": "https://i.kym-cdn.com/entries/icons/original/000/026/563/twitter_cover.jpg",
-        "img2": "/resource/tag",
+        "img1": "/resource/wordcloud_tag.jpg",
+        "img2": "/resource/tag.jpg",
     },
     "1": {
         "title": "Country Code",
-        "img1": "/resource/wordcloud_country",
-        "img2": "/resource/country",
+        "img1": "/resource/wordcloud_country.jpg",
+        "img2": "/resource/country.jpg",
     },
     "2": {
         "title": "Device",
-        "img1": "/resource/wordcloud_device",
-        "img2": "/resource/device",
+        "img1": "/resource/wordcloud_device.jpg",
+        "img2": "/resource/device.jpg",
     },
     "3": {
         "title": "Dataflow",
-        "img": "/resource/number"
+        "img": "/resource/number.jpg"
     }
 }
 
