@@ -8,7 +8,7 @@ from wordcloud import STOPWORDS
 
 #tag
 def tag():
-    path = r'Users/liupeihan/Desktop/hashtag_file.csv/' # use your path
+    path = r'/hashtag_file.csv/' # use your path
     all_files = glob.glob(path + "/*.csv")
 
     for filename in all_files:
@@ -43,7 +43,7 @@ def tag():
 
 #country
 def country():
-    path = r'Users/liupeihan/Desktop/country_file.csv/' # use your path
+    path = r'/country_file.csv/' # use your path
     all_files = glob.glob(path + "/*.csv")
 
     for filename in all_files:
@@ -73,7 +73,7 @@ def country():
 
 #device
 def device():
-    path = r'Users/liupeihan/Desktop/device_file.csv/' # use your path
+    path = r'/device_file.csv/' # use your path
     all_files = glob.glob(path + "/*.csv")
 
     for filename in all_files:
@@ -104,7 +104,7 @@ def device():
 
 #折线图
 def number():
-    path = r'Users/liupeihan/Desktop/number_file.csv/'  # use your path
+    path = r'/number_file.csv/'  # use your path
     all_files = glob.glob(path + "/*.csv")
 
     for filename in all_files:

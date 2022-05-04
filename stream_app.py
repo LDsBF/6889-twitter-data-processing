@@ -32,29 +32,26 @@ def process_rdd(time, rdd):
         # Register the dataframe as table
         hashtags_df.registerTempTable("hashtags")
 
-        # get the top 10 hashtags from the table using SQL and print them
         hashtag_counts_df = sql_context.sql(
             "select word , word_count from hashtags where word like '#%'order by word_count desc limit 10")
         hashtag_counts_df.show()
+        print("show table 2")
         hashtag_counts_df.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').option("header",
-                                                                                                        "true").csv(
-            "Users/liupeihan/Desktop/hashtag_file.csv")
+                                                                                                        "true").save(
+            "hashtag_file.csv")
 
         country_counts_df = sql_context.sql(
             "select word as country_code, word_count as tweet_count from hashtags where word like 'CC%'order by word_count desc limit 10")
         country_counts_df.show()
         country_counts_df.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').option("header",
-                                                                                                        "true").csv(
-            "Users/liupeihan/Desktop/country_file.csv")
-
+                                                                                                        "true").save(
+            "country_file.csv")
 
         device_df = sql_context.sql(
             "select word as device, word_count as device_count from hashtags where word like 'TS%'order by word_count desc limit 10")
         device_df.show()
-        device_df.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').option("header", "true").csv(
-            "Users/liupeihan/Desktop/device_file.csv")
-
-        # send_df_to_dashboard(device_df)
+        device_df.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').option("header", "true").save(
+            "device_file.csv")
     except:
         pass
 
@@ -80,7 +77,7 @@ def process_rdd1(time, rdd):
         hashtag_counts_df.show()
         hashtag_counts_df.coalesce(1).write.format('com.databricks.spark.csv').mode('overwrite').option("header",
                                                                                                         "true").csv(
-            "Users/liupeihan/Desktop/number_file.csv")
+            "number_file.csv")
 
 
     except:
