@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+
+    <script type="text/javascript" src="{{ url_for('static', filename = 'dataflow.js') }}"></script>
+
+    <link rel="stylesheet" href="{{url_for('static', filename='dataflow.css')}}">
+    <script>
+        let data = {{data|tojson}};
+        let id = {{id|tojson}};
+    </script>
+
+    <div class="row">
+        <div class="col-md-12" id="title"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <img id="dataflow">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <btn class="btn" id="prev">prev</btn>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <script type="text/javascript" src="{{ url_for('static', filename = 'graphPage.js') }}"></script>
+    <link rel="stylesheet" href="{{url_for('static', filename='graphPage.css')}}">
+    <script>
+        let data = {{data|tojson}};
+        let id = {{id|tojson}};
+    </script>
+
+    <div class="row">
+        <div class="col-md-12" id="title"></div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6" id="wordCloud">
+            <img id="wordCloudGraph">
+        </div>
+        <div class="col-md-6" id="histogram">
+            <img id="histogramGraph">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <btn class="btn" id="prev">prev</btn>
+        </div>
+        <div class="col-md-6">
+            <btn class="btn" id="next">next</btn>
+        </div>
+    </div>
+{% endblock %}
+
+
